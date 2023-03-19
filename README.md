@@ -53,7 +53,7 @@ If you want to have your configuration persistent you have to link the configura
 docker run -d -v <host directoy>:/config -P anarion80/pyload-ng:latest
 ```
 
-By default, pyload will be run as root, and will download files with uid 0 and gid 0. If you want to change this behavior, you can specify the UID and GID that will be used for the downloaded files by using ENV VARS
+By default, pyload will be run as root, and will download files with uid 0 and gid 0. If you want to change this behavior, you can specify the PUID and PGID that will be used for the downloaded files by using ENV VARS
 
 Docker run command
 -----
@@ -64,8 +64,8 @@ docker \
     -d \
     -v <host download directory>:/downloads \
     -v <host config directoy>:/config \
-    -e UID=<uid> \
-    -e GID=<gid> \
+    -e PUID=<uid> \
+    -e PGID=<gid> \
     -P \
     anarion80/pyload-ng:latest
 ```
@@ -82,8 +82,8 @@ services:
       ports:
         - 8000:8000
       environment:
-        - UID=1000
-        - GID=1000
+        - PUID=1000
+        - PGID=1000
       volumes:
         - /path/to/config:/config
         - /path/to/data:/downloads

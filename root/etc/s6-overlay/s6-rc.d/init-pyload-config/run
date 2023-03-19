@@ -1,6 +1,9 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
+[ -z "$PUID" ] && PUID=911
+[ -z "$PGID" ] && PGID=911
+
 # create our folders
 mkdir -p \
     /config/settings \
@@ -12,7 +15,7 @@ cp -n \
     /config/settings/pyload.cfg
 
 # permissions
-lsiown -R abc:abc \
+lsiown -R $PUID:$PGID \
     /config
-lsiown abc:abc \
+lsiown $PUID:$PGID \
     /downloads
