@@ -22,14 +22,16 @@ Install
 Install is easy as all docker images
 
 ```sh
-docker pull anarion80/pyload-ng:latest
+docker pull anarion/pyload-ng:latest
+docker pull ghcr.io/anarion80/pyload-ng:latest
 ```
 
 Running
 ----
 
 ```sh
-docker run -d -P anarion80/pyload-ng:latest
+docker run -d -P anarion/pyload-ng:latest
+docker run -d -P ghcr.io/anarion80/pyload-ng:latest
 ```
 
 Configuration
@@ -38,19 +40,22 @@ Configuration
 You can link your Downloads to your host very easy like that:
 
 ```sh
-docker run -d -v <host directoy>:/downloads -P anarion80/pyload-ng:latest
+docker run -d -v <host directoy>:/downloads -P anarion/pyload-ng:latest
+docker run -d -v <host directoy>:/downloads -P ghcr.io/anarion80/pyload-ng:latest
 ```
 
 Notice to replace ```<host directory>``` with your directory path on the host. So if you want to store your Downloads in ```/tmp/Downloads``` then your command would look like this:
 
 ```sh
-docker run -d -v /tmp/Downloads:/downloads -P anarion80/pyload-ng:latest
+docker run -d -v /tmp/Downloads:/downloads -P anarion/pyload-ng:latest
+docker run -d -v /tmp/Downloads:/downloads -P ghcr.io/anarion80/pyload-ng:latest
 ```
 
 If you want to have your configuration persistent you have to link the configuration directory outside of the container. This can happen like this:
 
 ```sh
-docker run -d -v <host directoy>:/config -P anarion80/pyload-ng:latest
+docker run -d -v <host directoy>:/config -P anarion/pyload-ng:latest
+docker run -d -v <host directoy>:/config -P ghcr.io/anarion80/pyload-ng:latest
 ```
 
 By default, pyload will be run as root, and will download files with uid 0 and gid 0. If you want to change this behavior, you can specify the PUID and PGID that will be used for the downloaded files by using ENV VARS
@@ -67,7 +72,7 @@ docker \
     -e PUID=<uid> \
     -e PGID=<gid> \
     -P \
-    anarion80/pyload-ng:latest
+    anarion/pyload-ng:latest
 ```
 
 Sample compose file
@@ -77,7 +82,7 @@ Sample compose file
 version: "2"
 services:
     pyload:
-      image: anarion80/pyload-ng:latest
+      image: anarion/pyload-ng:latest
       container_name: pyload
       ports:
         - 8000:8000
