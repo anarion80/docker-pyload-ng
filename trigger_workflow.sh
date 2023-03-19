@@ -8,7 +8,7 @@ target_url="https://api.github.com/repos/anarion80/docker-pyload-ng/actions/work
 Pushover_URL='https://api.pushover.net/1/messages.json'
 Pushover_Token='<token>'
 Pushover_User_Key='<user_key>'
-Github_Token='<github_token>'
+Github_Token="<github_token>"
 if [ -z "$1" ]; then
     branch="main"
 else
@@ -23,10 +23,23 @@ repository_name=$(echo "$repository_url" | cut -d '/' -f 5 | cut -d '.' -f 1)
 current_commit=$(curl -s "https://api.github.com/repos/$repository_owner/$repository_name/git/refs/heads/$branch" | jq -r .object.sha)
 
 # Check if the commit hash has changed
-if [ -f .last_commit ] && [ "$current_commit" == "$(cat .last_commit)" ]; then
+if [ -f .last_commit_$branch ] && [ "$current_commit" == "$(cat .last_commit_$branch)" ]; then
     # Commit hash has not changed, exit the script
     exit 0
 fi
+
+# Trigger workflow
+version=$current_commit
+message="{\"ref\":\"main\",\"inputs\":{\"version\":\"${version}\"}}"
+curl \
+-X POST \
+-H "Accept: application/vnd.github+json" \
+-H "Authorization: Bearer ${Github_Token}" \
+-H "X-GitHub-Api-Version: 2022-11-28" \
+"$target_url" \
+-d $message > /dev/null 2>&1
+
+echo $message
 
 # Pushover notification
 /usr/bin/curl -X POST -s \
@@ -37,4 +50,4 @@ fi
     "${Pushover_URL}" > /dev/null 2>&1
 
 # Update the .last_commit file with the new commit hash
-echo "$current_commit" > .last_commit
+echo "$current_commit" > .last_commit_$branch
