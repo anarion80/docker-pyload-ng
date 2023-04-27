@@ -42,7 +42,7 @@ RUN echo "**** install binary packages ****" && \
 
 
 FROM builder AS source_builder
-ARG PIP_PACKAGES="Babel Jinja2==3.0.3"
+ARG PIP_PACKAGES="Babel Jinja2"
 
 # Get pyLoad
 RUN git clone https://github.com/pyload/pyload.git /source \
