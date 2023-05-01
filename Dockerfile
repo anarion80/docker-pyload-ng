@@ -62,14 +62,14 @@ ARG APK_PACKAGES="gcc g++ musl-dev python3-dev libffi-dev openssl-dev jpeg-dev z
 
 ENV PYCURL_SSL_LIBRARY="openssl"
 
+COPY . /source
 WORKDIR /wheels
 
 RUN echo "**** install build packages ****" && \
 	apk add $APK_INSTALL_OPTIONS $APK_PACKAGES && \
 	\
 	echo "**** build pyLoad dependencies ****" && \
-	python3 -c "import configparser as cp; c = cp.ConfigParser(); c.read('/source/setup.cfg'); plugins = '\\n'.join([l for l in c['options.extras_require']['plugins'].strip().split('\\n') if 'platform_system' not in l]); print(c['options']['install_requires'] + '\n' + plugins)" | \
-	xargs pip3 wheel --wheel-dir=.
+	pip3 wheel -w /wheels /source
 
 FROM builder AS package_builder
 
@@ -80,7 +80,7 @@ WORKDIR /package
 RUN ls -al /source && ls -al /source/src/pyload
 
 RUN echo "**** build pyLoad package ****" && \
-	pip3 install $PIP_INSTALL_OPTIONS --find-links=/wheels --no-index --prefix=. /source[plugins]
+	pip3 install $PIP_INSTALL_OPTIONS --find-links=/wheels --no-index --prefix=. /source[extra]
 
 FROM builder
 
